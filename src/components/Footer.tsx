@@ -43,11 +43,11 @@ export const Footer: React.FC = () => {
               Contact
             </a>
             <a
-              href="mailto:rajuyeshuuu@gmail.com"
+              href="mailto:editoryeshuuu@gmail.com"
               className="text-white hover:text-neutral-300 transition-colors flex items-center gap-1.5"
             >
               <Mail className="w-3.5 h-3.5" />
-              <span>rajuyeshuuu@gmail.com</span>
+              <span>editoryeshuuu@gmail.com</span>
             </a>
           </div>
 

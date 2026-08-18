@@ -41,3 +41,25 @@ export interface ProcessStep {
   description: string;
   details: string[];
 }
+
+export interface BookingSubmission {
+  name: string;
+  email: string;
+  phone: string;
+  serviceId: string;
+  serviceName: string;
+  startingPrice: string;
+  budgetTier: string;
+  footageLink: string;
+  message: string;
+  submittedAt: string;
+  targetEmail: string;
+}
+
+export interface BookingNotificationResponse {
+  success: boolean;
+  message: string;
+  notification: BookingSubmission;
+  emailSentTo: string;
+}
+
