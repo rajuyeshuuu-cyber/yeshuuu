@@ -63,3 +63,25 @@ export interface BookingNotificationResponse {
   emailSentTo: string;
 }
 
+export type HireInquiryType = 'freelancer' | 'job' | 'custom_project';
+
+export interface HiringRequestPayload {
+  name: string;
+  email: string;
+  whatsapp: string;
+  serviceRequired: string;
+  projectDetails: string;
+  budget: string;
+  deadline: string;
+  submittedAt?: string;
+  targetEmail?: string;
+}
+
+export interface HireSubmissionResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  emailSentTo?: string;
+  deliveredVia?: string;
+  data?: HiringRequestPayload;
+}

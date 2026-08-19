@@ -1,12 +1,17 @@
 import React from 'react';
-import { Play, ArrowDown, Film, Sparkles, CheckCircle2, Award, Clock, Flame } from 'lucide-react';
+import { Play, ArrowDown, Briefcase, Sparkles, Film, ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   onExploreServices: () => void;
   onViewWork: () => void;
+  onOpenHire: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onExploreServices, onViewWork }) => {
+export const Hero: React.FC<HeroProps> = ({
+  onExploreServices,
+  onViewWork,
+  onOpenHire,
+}) => {
   return (
     <section
       id="hero-section"
@@ -28,7 +33,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreServices, onViewWork }) => 
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="font-mono font-medium text-neutral-200">YESHUUU EDITS</span>
           <span className="text-neutral-600">•</span>
-          <span className="text-neutral-400">Cinematic Post-Production Lab</span>
+          <span className="text-neutral-400">Available for Freelance & Contract Projects</span>
         </div>
 
         {/* Main Title */}
@@ -53,20 +58,34 @@ export const Hero: React.FC<HeroProps> = ({ onExploreServices, onViewWork }) => 
           commercial ad campaigns, and slick motion graphics that keep audiences glued.
         </p>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center mb-16">
+        {/* CTAs with prominent HIRE ME button */}
+        <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto justify-center mb-16">
+          {/* Primary High-Impact HIRE ME Button */}
+          <button
+            id="hero-hire-me-btn"
+            onClick={onOpenHire}
+            className="w-full sm:w-auto px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-md hover:bg-neutral-200 transition-all shadow-xl shadow-white/10 active:scale-95 cursor-pointer flex items-center justify-center gap-2 group ring-2 ring-white/30"
+          >
+            <Briefcase className="w-4 h-4 text-black group-hover:scale-110 transition-transform" />
+            <span>Hire Me</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+
+          {/* Secondary Explore Services Button */}
           <button
             id="hero-explore-services-btn"
             onClick={onExploreServices}
-            className="w-full sm:w-auto px-8 py-4 bg-white text-black font-semibold text-xs uppercase tracking-widest rounded-md hover:bg-neutral-200 transition-all shadow-xl shadow-white/10 active:scale-95 cursor-pointer flex items-center justify-center gap-2 group"
+            className="w-full sm:w-auto px-7 py-4 bg-neutral-900 border border-neutral-700 text-white font-semibold text-xs uppercase tracking-widest rounded-md hover:bg-neutral-800 hover:border-neutral-500 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Explore Services</span>
-            <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+            <ArrowDown className="w-3.5 h-3.5" />
           </button>
+
+          {/* Tertiary View Work Button */}
           <button
             id="hero-view-work-btn"
             onClick={onViewWork}
-            className="w-full sm:w-auto px-8 py-4 bg-neutral-900 border border-neutral-800 text-neutral-200 font-semibold text-xs uppercase tracking-widest rounded-md hover:bg-neutral-800 hover:text-white hover:border-neutral-700 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-7 py-4 bg-neutral-950/80 border border-neutral-800 text-neutral-300 font-semibold text-xs uppercase tracking-widest rounded-md hover:bg-neutral-900 hover:text-white hover:border-neutral-700 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>Featured Work</span>

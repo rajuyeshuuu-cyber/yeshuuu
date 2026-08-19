@@ -6,15 +6,20 @@ import { ServiceModal } from './components/ServiceModal';
 import { PortfolioSection } from './components/PortfolioSection';
 import { ProcessSection } from './components/ProcessSection';
 import { AboutSection } from './components/AboutSection';
+import { HireMeSection } from './components/HireMeSection';
+import { HireMeModal } from './components/HireMeModal';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { SERVICES_DATA } from './data/servicesData';
-import { ServiceItem } from './types';
+import { ServiceItem, HireInquiryType } from './types';
 
 export default function App() {
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [selectedQuoteServiceId, setSelectedQuoteServiceId] = useState<string>('video-editing');
+  const [isHireModalOpen, setIsHireModalOpen] = useState(false);
+  const [hireModalType, setHireModalType] = useState<HireInquiryType>('freelancer');
+  const [defaultHireService, setDefaultHireService] = useState<string | undefined>(undefined);
 
   const handleOpenQuote = (serviceName?: string) => {
     if (serviceName) {
@@ -29,6 +34,12 @@ export default function App() {
     if (contactElem) {
       contactElem.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleOpenHire = (type: HireInquiryType = 'freelancer', service?: string) => {
+    setHireModalType(type);
+    setDefaultHireService(service);
+    setIsHireModalOpen(true);
   };
 
   const handleExploreService = (service: ServiceItem) => {
@@ -66,14 +77,18 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-neutral-800 selection:text-white flex flex-col">
-      {/* Fixed Navigation Bar */}
-      <Navbar onOpenQuote={() => handleOpenQuote()} />
+      {/* Fixed Navigation Bar with Hire Me integration */}
+      <Navbar
+        onOpenQuote={() => handleOpenQuote()}
+        onOpenHire={(type) => handleOpenHire(type || 'freelancer')}
+      />
 
       {/* Main Content Sections */}
       <main className="flex-1">
         <Hero
           onExploreServices={scrollToServices}
           onViewWork={scrollToWork}
+          onOpenHire={() => handleOpenHire('freelancer')}
         />
 
         <ServicesSection
@@ -87,9 +102,16 @@ export default function App() {
 
         <AboutSection />
 
+        {/* Dedicated Visible HIRE ME Section */}
+        <HireMeSection />
+
         <TestimonialsSection />
 
-        <ContactSection selectedServiceId={selectedQuoteServiceId} />
+        {/* Contact Section with prominent Hire Me action card */}
+        <ContactSection
+          selectedServiceId={selectedQuoteServiceId}
+          onOpenHire={() => handleOpenHire('freelancer')}
+        />
       </main>
 
       {/* Footer */}
@@ -101,6 +123,14 @@ export default function App() {
         isOpen={!!selectedService}
         onClose={handleCloseModal}
         onGetQuote={handleGetQuoteFromModal}
+      />
+
+      {/* Direct Quick-Access Hire Me Modal with Freelancer/Job options */}
+      <HireMeModal
+        isOpen={isHireModalOpen}
+        defaultType={hireModalType}
+        defaultService={defaultHireService}
+        onClose={() => setIsHireModalOpen(false)}
       />
     </div>
   );

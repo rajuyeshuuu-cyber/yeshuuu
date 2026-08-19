@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Send, CheckCircle2, MessageSquare, Phone, Clock, ArrowRight, ExternalLink, Calendar } from 'lucide-react';
+import { Mail, Send, CheckCircle2, MessageSquare, Phone, Clock, ArrowRight, ExternalLink, Calendar, Briefcase, Sparkles } from 'lucide-react';
 import { SERVICES_DATA } from '../data/servicesData';
 import { NOTIFICATION_EMAIL, sendBookingNotification, generateBookingMailto } from '../utils/bookingService';
 import { BookingSubmission } from '../types';
 
 interface ContactSectionProps {
   selectedServiceId?: string;
+  onOpenHire?: () => void;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ selectedServiceId }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({ selectedServiceId, onOpenHire }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -82,7 +83,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedServiceI
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-xs uppercase tracking-widest text-neutral-400 font-mono">
-                  DIRECT BOOKING SYSTEM
+                  DIRECT INBOX & NOTIFICATIONS
                 </span>
               </div>
               <h2
@@ -92,9 +93,48 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedServiceI
               >
                 START YOUR PROJECT
               </h2>
-              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-8 font-normal">
+              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed mb-6 font-normal">
                 Submit your project brief below. All booking details, footage links, and specifications are dispatched directly to our studio inbox for instant review.
               </p>
+
+              {/* Prominent High-Visibility HIRE ME Action Box */}
+              <div
+                id="contact-hire-me-box"
+                className="p-5 rounded-2xl bg-neutral-900/90 border border-neutral-700/80 shadow-2xl mb-8 relative overflow-hidden group"
+              >
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-neutral-400/50 to-transparent" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-white" />
+                    <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                      DIRECT TALENT INQUIRY
+                    </span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-white text-black font-mono font-bold uppercase">
+                    OPEN
+                  </span>
+                </div>
+                <p className="text-xs text-neutral-300 mb-4 leading-relaxed">
+                  Looking to collaborate on a freelance project or hire for a permanent job role?
+                </p>
+                <button
+                  type="button"
+                  id="contact-hire-me-action-btn"
+                  onClick={() => {
+                    if (onOpenHire) {
+                      onOpenHire();
+                    } else {
+                      const hireEl = document.querySelector('#hire');
+                      if (hireEl) hireEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-full py-3 px-4 bg-white text-black hover:bg-neutral-200 rounded-xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/10 active:scale-98 cursor-pointer"
+                >
+                  <Briefcase className="w-3.5 h-3.5" />
+                  <span>HIRE ME (FREELANCER / JOB)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
 
               {/* Direct channels */}
               <div className="space-y-3 mb-8">
