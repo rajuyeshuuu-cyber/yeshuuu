@@ -60,16 +60,7 @@ export async function sendBookingNotification(
   }
 ): Promise<BookingNotificationResponse> {
   const now = new Date();
-  const formattedDateTime = now.toLocaleString('en-US', {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZoneName: 'short'
-  });
+  const formattedDateTime = now.toLocaleString('en-US');
 
   const payload: BookingSubmission = {
     ...formData,
