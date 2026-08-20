@@ -12,11 +12,12 @@ import { TestimonialsSection } from './components/TestimonialsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { SERVICES_DATA } from './data/servicesData';
-import { ServiceItem, HireInquiryType } from './types';
+import { ServiceItem, PortfolioCategory, HireInquiryType } from './types';
 
 export default function App() {
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const [selectedQuoteServiceId, setSelectedQuoteServiceId] = useState<string>('video-editing');
+  const [selectedQuoteServiceId, setSelectedQuoteServiceId] = useState<string>('reels-editing');
+  const [activePortfolioCategory, setActivePortfolioCategory] = useState<PortfolioCategory>('Reels');
   const [isHireModalOpen, setIsHireModalOpen] = useState(false);
   const [hireModalType, setHireModalType] = useState<HireInquiryType>('freelancer');
   const [defaultHireService, setDefaultHireService] = useState<string | undefined>(undefined);
@@ -40,6 +41,18 @@ export default function App() {
     setHireModalType(type);
     setDefaultHireService(service);
     setIsHireModalOpen(true);
+  };
+
+  const handleHireService = (service: ServiceItem) => {
+    handleOpenHire('freelancer', `${service.name} (${service.startingPrice})`);
+  };
+
+  const handleViewPortfolioCategory = (category: PortfolioCategory) => {
+    setActivePortfolioCategory(category);
+    const workElem = document.querySelector('#work');
+    if (workElem) {
+      workElem.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleExploreService = (service: ServiceItem) => {
@@ -94,9 +107,14 @@ export default function App() {
         <ServicesSection
           services={SERVICES_DATA}
           onSelectService={handleExploreService}
+          onViewPortfolioCategory={handleViewPortfolioCategory}
+          onHireService={handleHireService}
         />
 
-        <PortfolioSection />
+        <PortfolioSection
+          activeCategory={activePortfolioCategory}
+          onCategoryChange={setActivePortfolioCategory}
+        />
 
         <ProcessSection />
 

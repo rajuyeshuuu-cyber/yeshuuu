@@ -3,14 +3,13 @@ import { HiringRequestPayload, HireSubmissionResponse } from '../types';
 export const HIRE_NOTIFICATION_EMAIL = 'editoryeshuuu@gmail.com';
 
 export const SERVICE_OPTIONS = [
-  'Cinematic Video Editing (Long-form / Film)',
-  'Color Grading & Film Look (DaVinci Resolve)',
-  'High-Retention Reels / Shorts / TikTok',
-  'Commercial Ad & Brand Promo Campaign',
-  'YouTube Video Post-Production',
-  'Trailers & Teasers',
-  'Motion Graphics & 3D Typography',
-  'Sound Design & Audio Mastering',
+  'Reels Editing (₹999)',
+  'Corporate Ads (₹2,999)',
+  'Trailer Editing (₹2,499)',
+  'AI Video Editing (₹1,999)',
+  'Poster Design (₹499)',
+  'Banner Design (₹499)',
+  'Thumbnail Design (₹499)',
   'Full-Time / In-House Editor Role',
   'Other / Custom Project',
 ];

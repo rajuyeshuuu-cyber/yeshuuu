@@ -10,21 +10,35 @@ export interface ServiceItem {
   iconName: string;
   turnaround: string;
   deliverables: string;
+  portfolioCategory: PortfolioCategory;
 }
+
+export type PortfolioCategory =
+  | 'Reels'
+  | 'Corporate Ads'
+  | 'Trailer Cuts'
+  | 'AI Videos'
+  | 'Posters'
+  | 'Banners'
+  | 'Thumbnails';
 
 export interface PortfolioItem {
   id: string;
   title: string;
-  category: 'Cinematic' | 'Reels' | 'Commercial' | 'Trailers' | 'Motion' | 'Colour Grading' | string;
+  category: PortfolioCategory;
+  mediaType: 'video' | 'image';
   client: string;
-  duration: string;
+  duration?: string;
   thumbnail: string;
-  aspectRatio: '16:9' | '9:16';
+  aspectRatio: '16:9' | '9:16' | '3:4' | '21:9' | '4:5' | '1:1';
   views?: string;
   description: string;
   tags: string[];
   videoUrl?: string;
   poster?: string;
+  resolution?: string;
+  software?: string[];
+  dimensions?: string;
 }
 
 export interface Testimonial {
