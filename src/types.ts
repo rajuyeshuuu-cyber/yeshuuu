@@ -15,7 +15,7 @@ export interface ServiceItem {
 export interface PortfolioItem {
   id: string;
   title: string;
-  category: 'Cinematic' | 'Reels' | 'Commercial' | 'Trailers' | 'Motion';
+  category: 'Cinematic' | 'Reels' | 'Commercial' | 'Trailers' | 'Motion' | 'Colour Grading' | string;
   client: string;
   duration: string;
   thumbnail: string;
@@ -23,6 +23,8 @@ export interface PortfolioItem {
   views?: string;
   description: string;
   tags: string[];
+  videoUrl?: string;
+  poster?: string;
 }
 
 export interface Testimonial {

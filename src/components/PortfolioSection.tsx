@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Play, Sparkles, Sliders, ExternalLink, X, Film, Eye } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Sparkles, Sliders, ExternalLink, X, Film, Eye, Volume2, Maximize, CheckCircle2 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data/servicesData';
 import { PortfolioItem } from '../types';
 
@@ -7,12 +7,29 @@ export const PortfolioSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const [sliderPosition, setSliderPosition] = useState<number>(50);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const categories = ['All', 'Cinematic', 'Reels', 'Commercial', 'Trailers', 'Motion'];
+  const categories = ['All', 'Colour Grading', 'Cinematic', 'Reels', 'Commercial', 'Trailers', 'Motion'];
 
   const filteredItems = activeCategory === 'All'
     ? PORTFOLIO_DATA
-    : PORTFOLIO_DATA.filter((item) => item.category === activeCategory);
+    : PORTFOLIO_DATA.filter((item) => {
+        if (activeCategory === 'Colour Grading' || activeCategory === 'Color Grading') {
+          return item.category === 'Colour Grading' || item.category === 'Color Grading';
+        }
+        return item.category === activeCategory;
+      });
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedVideo(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <section id="work" className="py-24 px-4 sm:px-6 lg:px-8 bg-black text-white border-t border-neutral-900">
@@ -40,7 +57,7 @@ export const PortfolioSection: React.FC = () => {
             {categories.map((cat) => (
               <button
                 key={cat}
-                id={`portfolio-filter-${cat.toLowerCase()}`}
+                id={`portfolio-filter-${cat.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={() => setActiveCategory(cat)}
                 className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
                   activeCategory === cat
@@ -61,7 +78,7 @@ export const PortfolioSection: React.FC = () => {
               key={item.id}
               id={`portfolio-item-${item.id}`}
               onClick={() => setSelectedVideo(item)}
-              className="group relative bg-neutral-950 border border-neutral-800/80 hover:border-neutral-600 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-black"
+              className="group relative bg-neutral-950 border border-neutral-800/80 hover:border-neutral-600 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-black flex flex-col"
             >
               {/* Thumbnail Container */}
               <div className="relative aspect-video overflow-hidden bg-neutral-900">
@@ -75,16 +92,24 @@ export const PortfolioSection: React.FC = () => {
 
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-black/60 border border-neutral-600/80 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300">
+                  <div className="w-12 h-12 rounded-full bg-black/60 border border-neutral-600/80 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 shadow-xl">
                     <Play className="w-5 h-5 fill-current ml-0.5" />
                   </div>
                 </div>
 
                 {/* Top Badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-medium tracking-wider uppercase px-2.5 py-1 rounded bg-black/80 border border-neutral-800 text-neutral-300 backdrop-blur-sm">
-                    {item.category}
-                  </span>
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono font-medium tracking-wider uppercase px-2.5 py-1 rounded bg-black/80 border border-neutral-800 text-neutral-300 backdrop-blur-sm">
+                      {item.category}
+                    </span>
+                    {item.videoUrl && (
+                      <span className="text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 backdrop-blur-sm flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        PLAY VIDEO
+                      </span>
+                    )}
+                  </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/70 text-neutral-400 border border-neutral-800">
                     {item.duration}
                   </span>
@@ -100,17 +125,19 @@ export const PortfolioSection: React.FC = () => {
               </div>
 
               {/* Item Info */}
-              <div className="p-5">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 block mb-1">
-                  Client: {item.client}
-                </span>
-                <h3 className="text-base font-bold text-white tracking-wide mb-2 line-clamp-1 group-hover:text-neutral-200 transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-neutral-400 text-xs leading-relaxed line-clamp-2 mb-4">
-                  {item.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 block mb-1">
+                    Client: {item.client}
+                  </span>
+                  <h3 className="text-base font-bold text-white tracking-wide mb-2 line-clamp-1 group-hover:text-neutral-200 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-neutral-400 text-xs leading-relaxed line-clamp-2 mb-4">
+                    {item.description}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-2">
                   {item.tags.map((tag, tIdx) => (
                     <span
                       key={tIdx}
@@ -209,65 +236,107 @@ export const PortfolioSection: React.FC = () => {
       {selectedVideo && (
         <div
           id="portfolio-video-modal"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedVideo(null);
+          }}
         >
-          <div className="relative w-full max-w-4xl bg-neutral-950 border border-neutral-800 rounded-2xl overflow-hidden p-6 shadow-2xl">
+          <div className="relative w-full max-w-4xl bg-neutral-950 border border-neutral-800 rounded-2xl overflow-hidden p-5 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             <button
+              id="close-portfolio-modal"
               onClick={() => setSelectedVideo(null)}
-              className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white bg-neutral-900 rounded-full border border-neutral-800"
+              className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-white bg-neutral-900 hover:bg-neutral-800 rounded-full border border-neutral-800 transition-colors z-20 cursor-pointer"
               aria-label="Close video preview"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="mb-4">
-              <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-widest">
-                {selectedVideo.category} • Client: {selectedVideo.client}
-              </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
+            <div className="mb-4 pr-10">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-widest">
+                  {selectedVideo.category} • Client: {selectedVideo.client}
+                </span>
+                {selectedVideo.videoUrl && (
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    MASTER 4K PLAYBACK
+                  </span>
+                )}
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white">
                 {selectedVideo.title}
               </h3>
             </div>
 
-            {/* Video Player Mockup Container */}
-            <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-neutral-800 mb-5 flex items-center justify-center group">
-              <img
-                src={selectedVideo.thumbnail}
-                alt={selectedVideo.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover opacity-60"
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/40">
-                <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center shadow-xl mb-3 animate-pulse">
-                  <Play className="w-7 h-7 fill-current ml-1" />
-                </div>
-                <span className="text-sm font-semibold text-white tracking-wider uppercase">
-                  Cinematic Preview Loaded
-                </span>
-                <span className="text-xs text-neutral-400 font-mono mt-1">
-                  Master 4K 60FPS • Stereo Stems Synced
-                </span>
-              </div>
+            {/* Video Player Container */}
+            <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-neutral-800 mb-5 flex items-center justify-center shadow-inner">
+              {selectedVideo.videoUrl ? (
+                <video
+                  ref={videoRef}
+                  id="portfolio-active-video-player"
+                  src={selectedVideo.videoUrl}
+                  poster={selectedVideo.poster || selectedVideo.thumbnail}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-full object-contain bg-black"
+                >
+                  <source src={selectedVideo.videoUrl} type="video/mp4" />
+                  Your browser does not support HTML5 video playback.
+                </video>
+              ) : (
+                <>
+                  <img
+                    src={selectedVideo.thumbnail}
+                    alt={selectedVideo.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover opacity-60"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/40">
+                    <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center shadow-xl mb-3">
+                      <Play className="w-7 h-7 fill-current ml-1" />
+                    </div>
+                    <span className="text-sm font-semibold text-white tracking-wider uppercase">
+                      Cinematic Reel Preview Loaded
+                    </span>
+                    <span className="text-xs text-neutral-400 font-mono mt-1">
+                      Master 4K 60FPS • Stereo Stems Synced
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
-            <p className="text-sm text-neutral-300 mb-4">
+            <p className="text-sm text-neutral-300 mb-4 leading-relaxed">
               {selectedVideo.description}
             </p>
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-neutral-900">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {selectedVideo.tags.map((t, idx) => (
                   <span key={idx} className="text-xs font-mono text-neutral-400 bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800">
                     {t}
                   </span>
                 ))}
               </div>
-              <button
-                onClick={() => setSelectedVideo(null)}
-                className="px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white text-black rounded-lg hover:bg-neutral-200"
-              >
-                Close Preview
-              </button>
+              <div className="flex items-center gap-3">
+                {selectedVideo.videoUrl && (
+                  <a
+                    href={selectedVideo.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-neutral-900 text-neutral-300 hover:text-white border border-neutral-800 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-1.5"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Direct Video Link
+                  </a>
+                )}
+                <button
+                  onClick={() => setSelectedVideo(null)}
+                  className="px-5 py-2 text-xs font-semibold uppercase tracking-wider bg-white text-black rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer"
+                >
+                  Close Preview
+                </button>
+              </div>
             </div>
           </div>
         </div>

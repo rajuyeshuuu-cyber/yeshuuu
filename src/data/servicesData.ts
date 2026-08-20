@@ -119,6 +119,20 @@ export const SERVICES_DATA: ServiceItem[] = [
 
 export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
+    id: 'port-color-grade-01',
+    title: 'CINEMATIC FILM EMULATION - Master Grade',
+    category: 'Colour Grading',
+    client: 'Yeshuuu Creative Studio',
+    duration: '00:08',
+    thumbnail: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&q=80',
+    poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&q=80',
+    videoUrl: '/videos/color-grade-01.mp4',
+    aspectRatio: '16:9',
+    views: '1.8M',
+    description: 'High-precision DaVinci Resolve color grading showcasing dynamic range recovery, rich film tones, accurate skin tone balance, and customized cinematic LUTs.',
+    tags: ['Colour Grading', 'DaVinci Resolve', 'Film LUT', '4K Master']
+  },
+  {
     id: 'port-1',
     title: 'THE NIGHT WALKER - Cinematic Teaser',
     category: 'Cinematic',

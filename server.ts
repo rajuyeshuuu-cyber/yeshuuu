@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
+import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 import { processHireRequest, processBookingRequest, getNotificationEmail } from './api/_lib/email';
@@ -10,6 +11,22 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+// Dedicated handler for video file if present at public/videos, public, or root
+app.get(['/videos/color-grade-01.mp4', '/color-grade-01.mp4'], (req: Request, res: Response, next) => {
+  const possiblePaths = [
+    path.join(process.cwd(), 'public', 'videos', 'color-grade-01.mp4'),
+    path.join(process.cwd(), 'public', 'color-grade-01.mp4'),
+    path.join(process.cwd(), 'color-grade-01.mp4'),
+  ];
+
+  for (const filePath of possiblePaths) {
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+  }
+  next();
+});
 
 // Health Check API Endpoint
 app.get('/api/health', (req: Request, res: Response) => {
@@ -58,6 +75,7 @@ app.post('/api/booking', async (req: Request, res: Response) => {
 });
 
 async function startServer() {
+  // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
